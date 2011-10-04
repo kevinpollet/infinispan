@@ -74,6 +74,7 @@
       <module>demos/nearcache-client</module>
       <module>cdi/extension</module>
       <module>cdi/tck-runner</module>
+      <module>jcache</module>
    </modules>
 
    <profiles>
