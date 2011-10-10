@@ -1,0 +1,3 @@
+# Infinispan caching provider
+
+org.infinispan.jcache.InfinispanCachingProvider
