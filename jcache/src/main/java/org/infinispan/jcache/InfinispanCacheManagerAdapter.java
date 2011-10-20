@@ -91,7 +91,7 @@ class InfinispanCacheManagerAdapter implements CacheManager {
 
    @Override
    public <K, V> CacheBuilder<K, V> createCacheBuilder(String cacheName) {
-      assertNotNull(cacheName, "cacheName parameter cannot be null");
+      assertNotNull(cacheName, "cacheName must not be null");
       assertStarted();
 
       return new CacheBuilderImpl<K, V>(cacheName, this);
@@ -100,7 +100,7 @@ class InfinispanCacheManagerAdapter implements CacheManager {
    @Override
    @SuppressWarnings("unchecked")
    public <K, V> Cache<K, V> getCache(String cacheName) {
-      assertNotNull(cacheName, "cacheName parameter cannot be null");
+      assertNotNull(cacheName, "cacheName must not be null");
       assertStarted();
 
       return (Cache<K, V>) caches.get(cacheName);
@@ -121,7 +121,7 @@ class InfinispanCacheManagerAdapter implements CacheManager {
 
    @Override
    public boolean removeCache(String cacheName) throws IllegalStateException {
-      assertNotNull(cacheName, "cacheName parameter cannot be null");
+      assertNotNull(cacheName, "cacheName must not be null");
       assertStarted();
 
       if (cacheManager.cacheExists(cacheName) && caches.containsKey(cacheName)) {

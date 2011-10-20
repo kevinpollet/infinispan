@@ -116,7 +116,7 @@ class CacheBuilderImpl<K, V> implements CacheBuilder<K, V> {
 
    @Override
    public CacheBuilder<K, V> setCacheLoader(CacheLoader<K, V> cacheLoader) {
-      assertNotNull(cacheLoader, "cacheLoader parameter cannot be null");
+      assertNotNull(cacheLoader, "cacheLoader must not be null");
 
       this.cacheLoader = cacheLoader;
       return this;
@@ -124,7 +124,7 @@ class CacheBuilderImpl<K, V> implements CacheBuilder<K, V> {
 
    @Override
    public CacheBuilder<K, V> setCacheWriter(CacheWriter<K, V> cacheWriter) {
-      assertNotNull(cacheWriter, "cacheWriter parameter cannot be null");
+      assertNotNull(cacheWriter, "cacheWriter must not be null");
 
       this.cacheWriter = cacheWriter;
       return this;
@@ -132,7 +132,7 @@ class CacheBuilderImpl<K, V> implements CacheBuilder<K, V> {
 
    @Override
    public CacheBuilder<K, V> registerCacheEntryListener(CacheEntryListener<K, V> cacheEntryListener, NotificationScope scope, boolean synchronous) {
-      assertNotNull(cacheEntryListener, "cacheEntryListener parameter cannot be null");
+      assertNotNull(cacheEntryListener, "cacheEntryListener must not be null");
 
       listeners.add(new CacheListener<K, V>(cacheEntryListener, scope, synchronous));
       return this;
@@ -146,8 +146,8 @@ class CacheBuilderImpl<K, V> implements CacheBuilder<K, V> {
 
    @Override
    public CacheBuilder<K, V> setTransactionEnabled(IsolationLevel isolationLevel, Mode mode) {
-      assertNotNull(isolationLevel, "isolationLevel parameter cannot be null");
-      assertNotNull(mode, "mode parameter cannot be null");
+      assertNotNull(isolationLevel, "isolationLevel must not be null");
+      assertNotNull(mode, "mode must not be null");
 
       this.transactionsIsolationLevel = isolationLevel;
       this.transactionMode = mode;
@@ -174,8 +174,8 @@ class CacheBuilderImpl<K, V> implements CacheBuilder<K, V> {
 
    @Override
    public CacheBuilder<K, V> setExpiry(ExpiryType type, Duration timeToLive) {
-      assertNotNull(type, "type parameter cannot be null");
-      assertNotNull(timeToLive, "mode parameter cannot be null");
+      assertNotNull(type, "type must not be null");
+      assertNotNull(timeToLive, "mode must not be null");
 
       if (type == ExpiryType.ACCESSED) {
          accessedDuration = timeToLive;

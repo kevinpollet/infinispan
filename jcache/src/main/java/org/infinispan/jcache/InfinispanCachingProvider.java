@@ -37,8 +37,8 @@ public class InfinispanCachingProvider implements CachingProvider {
 
    @Override
    public CacheManager createCacheManager(ClassLoader classLoader, String name) {
-      assertNotNull(classLoader, "classLoader parameter cannot be null");
-      assertNotNull(name, "name parameter cannot be null");
+      assertNotNull(classLoader, "classLoader must not be null");
+      assertNotNull(name, "name must not be null");
 
       return new InfinispanCacheManagerAdapter(name, classLoader);
    }

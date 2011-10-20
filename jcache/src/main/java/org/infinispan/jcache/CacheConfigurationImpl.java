@@ -121,7 +121,7 @@ public class CacheConfigurationImpl implements CacheConfiguration {
 
    @Override
    public Duration getExpiry(ExpiryType type) {
-      assertNotNull(type, "type parameter cannot be null");
+      assertNotNull(type, "type must not be null");
 
       return type == ExpiryType.ACCESSED ? accessedDuration : modifiedDuration;
    }

@@ -63,9 +63,9 @@ public final class JMXHelper {
     * @throws CacheException if an error occurs during the MBean registration.
     */
    public static void registerStatisticsMBean(CacheStatistics cacheStatistics, String cacheManagerName, String cacheName) {
-      assertNotNull(cacheStatistics, "cacheStatistics parameter cannot be null");
-      assertNotNull(cacheManagerName, "cacheManagerName parameter cannot be null");
-      assertNotNull(cacheName, "cacheName parameter cannot be null");
+      assertNotNull(cacheStatistics, "cacheStatistics must not be null");
+      assertNotNull(cacheManagerName, "cacheManagerName must not be null");
+      assertNotNull(cacheName, "cacheName must not be null");
 
       try {
 
@@ -90,8 +90,8 @@ public final class JMXHelper {
     * @throws CacheException if an error occurs during the MBean un-registration.
     */
    public static void unregisterStatisticsMBean(String cacheManagerName, String cacheName) {
-      assertNotNull(cacheManagerName, "cacheManagerName parameter cannot be null");
-      assertNotNull(cacheName, "cacheName parameter cannot be null");
+      assertNotNull(cacheManagerName, "cacheManagerName must not be null");
+      assertNotNull(cacheName, "cacheName must not be null");
 
       try {
 
