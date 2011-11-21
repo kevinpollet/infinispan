@@ -25,6 +25,7 @@ package org.infinispan.jcache;
 import org.infinispan.AdvancedCache;
 import org.infinispan.DecoratedCache;
 import org.infinispan.config.Configuration;
+import org.infinispan.config.FluentConfiguration;
 import org.infinispan.jcache.event.CacheListener;
 import org.infinispan.jcache.util.logging.Log;
 import org.infinispan.manager.DefaultCacheManager;
@@ -45,7 +46,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static java.util.Collections.unmodifiableSet;
 import static javax.cache.Status.STARTED;
 import static javax.cache.Status.UNINITIALISED;
 import static org.infinispan.jcache.util.Contracts.assertNotNull;
@@ -108,15 +108,10 @@ class InfinispanCacheManagerAdapter implements CacheManager {
 
    @Override
    @SuppressWarnings("unchecked")
-   public <K, V> Set<Cache<K, V>> getCaches() {
+   public Iterable<Cache<?, ?>> getCaches() {
       assertStarted();
 
-      final Set<Cache<K, V>> cacheSet = new HashSet<Cache<K, V>>();
-      for (Cache<?, ?> oneCache : caches.values()) {
-         cacheSet.add((Cache<K, V>) oneCache);
-      }
-
-      return unmodifiableSet(cacheSet);
+      return caches.values();
    }
 
    @Override
@@ -153,7 +148,9 @@ class InfinispanCacheManagerAdapter implements CacheManager {
    }
 
    @Override
-   public void addImmutableClass(Class<?> immutableClass) {
+   public void registerImmutableClass(Class<?> immutableClass) {
+      assertNotNull(immutableClass, "immutableClass must not be null");
+
       immutableClasses.add(immutableClass);
    }
 
@@ -234,18 +231,16 @@ class InfinispanCacheManagerAdapter implements CacheManager {
    }
 
    private Configuration createInfinispanConfiguration(CacheConfiguration cacheConfiguration) {
-      final Configuration configuration = new Configuration();
+      final FluentConfiguration fluentConfiguration = new Configuration().fluent();
 
       if (cacheConfiguration.isStatisticsEnabled()) {
-         configuration.fluent()
-               .jmxStatistics();
+         fluentConfiguration.jmxStatistics();
       }
       if (cacheConfiguration.isStoreByValue()) {
-         configuration.fluent()
-               .storeAsBinary();
+         fluentConfiguration.storeAsBinary();
       }
 
-      return configuration;
+      return fluentConfiguration.build();
    }
 
    /**

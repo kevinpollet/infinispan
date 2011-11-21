@@ -26,6 +26,7 @@ import org.infinispan.stats.Stats;
 
 import javax.cache.Cache;
 import javax.cache.CacheStatistics;
+import javax.cache.Status;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
@@ -74,8 +75,8 @@ class CacheStatisticsImpl implements CacheStatistics {
    }
 
    @Override
-   public String getStatus() {
-      return cache.getStatus().toString();
+   public Status getStatus() {
+      return cache.getStatus();
    }
 
    @Override
@@ -138,17 +139,17 @@ class CacheStatisticsImpl implements CacheStatistics {
    }
 
    @Override
-   public long getAverageGetMillis() {
+   public float getAverageGetMillis() {
       return totalGetMillis.get() / getCacheGets();
    }
 
    @Override
-   public long getAveragePutMillis() {
+   public float getAveragePutMillis() {
       return totalPutMillis.get() / getCachePuts();
    }
 
    @Override
-   public long getAverageRemoveMillis() {
+   public float getAverageRemoveMillis() {
       return totalRemoveMillis.get() / getCacheRemovals();
    }
 

@@ -34,6 +34,7 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
 
+import static javax.cache.Status.STARTED;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.fail;
@@ -69,7 +70,7 @@ public class CacheStatisticsTest {
    }
 
    public void testGetStatus() {
-      assertEquals(cacheStatistics.getStatus(), "STARTED");
+      assertEquals(cacheStatistics.getStatus(), STARTED);
    }
 
    public void testGetCacheHits() {

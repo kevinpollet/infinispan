@@ -50,7 +50,6 @@ public class InfinispanCachingProvider implements CachingProvider {
 
    @Override
    public boolean isSupported(OptionalFeature optionalFeature) {
-      // currently no optional features are supported
-      return false;
+      return false; // no optional features are supported
    }
 }

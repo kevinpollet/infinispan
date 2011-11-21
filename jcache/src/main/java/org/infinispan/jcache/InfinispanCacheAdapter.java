@@ -165,7 +165,7 @@ class InfinispanCacheAdapter<K, V> implements Cache<K, V> {
    }
 
    @Override
-   public boolean remove(Object key, V oldValue) throws CacheException {
+   public boolean remove(K key, V oldValue) throws CacheException {
       assertStarted();
 
       return cache.remove(key, oldValue);
@@ -223,7 +223,7 @@ class InfinispanCacheAdapter<K, V> implements Cache<K, V> {
    }
 
    @Override
-   public boolean registerCacheEntryListener(CacheEntryListener<K, V> cacheEntryListener, NotificationScope scope, boolean synchronous) {
+   public boolean registerCacheEntryListener(CacheEntryListener<? super K, ? super V> cacheEntryListener, NotificationScope scope, boolean synchronous) {
       final CacheListener<K, V> cacheListener = new CacheListener<K, V>(cacheEntryListener, scope, synchronous);
       return listeners.add(cacheListener);
    }

@@ -34,9 +34,9 @@ public class CacheListener<K, V> {
 
    private final boolean synchronous;
    private final NotificationScope notificationScope;
-   private final CacheEntryListener<K, V> cacheEntryListener;
+   private final CacheEntryListener<? super K, ? super V> cacheEntryListener;
 
-   public CacheListener(CacheEntryListener<K, V> cacheEntryListener, NotificationScope notificationScope, boolean synchronous) {
+   public CacheListener(CacheEntryListener<? super K, ? super V> cacheEntryListener, NotificationScope notificationScope, boolean synchronous) {
       this.cacheEntryListener = cacheEntryListener;
       this.notificationScope = notificationScope;
       this.synchronous = synchronous;
@@ -50,7 +50,7 @@ public class CacheListener<K, V> {
       return notificationScope;
    }
 
-   public CacheEntryListener<K, V> getCacheEntryListener() {
+   public CacheEntryListener<? super K, ? super V> getCacheEntryListener() {
       return cacheEntryListener;
    }
 

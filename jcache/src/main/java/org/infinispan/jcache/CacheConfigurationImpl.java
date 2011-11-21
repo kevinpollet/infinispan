@@ -23,6 +23,8 @@
 package org.infinispan.jcache;
 
 import javax.cache.CacheConfiguration;
+import javax.cache.CacheLoader;
+import javax.cache.CacheWriter;
 import javax.cache.transaction.IsolationLevel;
 import javax.cache.transaction.Mode;
 
@@ -70,18 +72,8 @@ public class CacheConfigurationImpl implements CacheConfiguration {
    }
 
    @Override
-   public void setReadThrough(boolean readThrough) {
-      throw new UnsupportedOperationException("Cache configuration cannot be modified at runtime");
-   }
-
-   @Override
    public boolean isWriteThrough() {
       return writeThrough;
-   }
-
-   @Override
-   public void setWriteThrough(boolean writeThrough) {
-      throw new UnsupportedOperationException("Cache configuration cannot be modified at runtime");
    }
 
    @Override
@@ -110,13 +102,18 @@ public class CacheConfigurationImpl implements CacheConfiguration {
    }
 
    @Override
-   public IsolationLevel getTransactionIsolationLevel() {
-      return transactionsIsolationLevel;
+   public CacheLoader getCacheLoader() {
+      return null;
    }
 
    @Override
-   public void setExpiry(ExpiryType type, Duration duration) {
-      throw new UnsupportedOperationException("Cache configuration cannot be modified at runtime");
+   public CacheWriter getCacheWriter() {
+      return null;
+   }
+
+   @Override
+   public IsolationLevel getTransactionIsolationLevel() {
+      return transactionsIsolationLevel;
    }
 
    @Override
