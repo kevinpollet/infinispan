@@ -31,10 +31,8 @@ import org.infinispan.util.logging.LogFactory;
 import javax.cache.Cache;
 import javax.cache.CacheConfiguration;
 import javax.cache.CacheException;
-import javax.cache.CacheLoader;
 import javax.cache.CacheManager;
 import javax.cache.CacheStatistics;
-import javax.cache.CacheWriter;
 import javax.cache.Status;
 import javax.cache.event.CacheEntryListener;
 import javax.cache.event.NotificationScope;
@@ -63,8 +61,6 @@ class InfinispanCacheAdapter<K, V> implements Cache<K, V> {
    private final AdvancedCache<K, V> cache;
    private final CacheConfiguration cacheConfiguration;
    private final CacheManager cacheManager;
-   private final CacheLoader<K, V> cacheLoader;
-   private final CacheWriter<K, V> cacheWriter;
    private final CacheStatistics cacheStatistics;
    private final Set<Class<?>> immutableClasses;
    private final Set<CacheListener<K, V>> listeners;
@@ -72,8 +68,6 @@ class InfinispanCacheAdapter<K, V> implements Cache<K, V> {
    InfinispanCacheAdapter(AdvancedCache<K, V> cache,
                           CacheConfiguration cacheConfiguration,
                           CacheManager cacheManager,
-                          CacheWriter<K, V> cacheWriter,
-                          CacheLoader<K, V> cacheLoader,
                           Set<Class<?>> immutableClasses,
                           Set<CacheListener<K, V>> listeners) {
 
@@ -81,8 +75,6 @@ class InfinispanCacheAdapter<K, V> implements Cache<K, V> {
       this.cache = cache;
       this.cacheConfiguration = cacheConfiguration;
       this.cacheManager = cacheManager;
-      this.cacheWriter = cacheWriter;
-      this.cacheLoader = cacheLoader;
       this.cacheStatistics = new CacheStatisticsImpl(this, cache.getStats());
       this.immutableClasses = immutableClasses;
       this.listeners = listeners;

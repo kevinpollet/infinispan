@@ -100,6 +100,8 @@ class CacheBuilderImpl<K, V> implements CacheBuilder<K, V> {
             writeThrough,
             storeByValue,
             statisticsEnabled,
+            cacheLoader,
+            cacheWriter,
             transactionsIsolationLevel,
             transactionMode,
             modifiedDuration,
@@ -107,11 +109,7 @@ class CacheBuilderImpl<K, V> implements CacheBuilder<K, V> {
       );
 
       return cacheManager.unwrap(InfinispanCacheManagerAdapter.class)
-            .createCache(name,
-                         cacheConfiguration,
-                         cacheWriter,
-                         cacheLoader,
-                         listeners);
+            .createCache(name, cacheConfiguration, listeners);
    }
 
    @Override

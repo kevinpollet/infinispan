@@ -35,13 +35,14 @@ import static org.infinispan.jcache.util.Contracts.assertNotNull;
  *
  * @author Kevin Pollet <kevin.pollet@serli.com> (C) 2011 SERLI
  */
-//TODO finish configuration
 public class CacheConfigurationImpl implements CacheConfiguration {
 
    private final boolean readThrough;
    private final boolean writeThrough;
    private final boolean storeByValue;
    private final boolean staticsEnabled;
+   private final CacheLoader<?, ?> cacheLoader;
+   private final CacheWriter<?, ?> cacheWriter;
    private final IsolationLevel transactionsIsolationLevel;
    private final Mode transactionMode;
    private final Duration modifiedDuration;
@@ -51,6 +52,8 @@ public class CacheConfigurationImpl implements CacheConfiguration {
                                  boolean writeThrough,
                                  boolean storeByValue,
                                  boolean staticsEnabled,
+                                 CacheLoader<?, ?> cacheLoader,
+                                 CacheWriter<?, ?> cacheWriter,
                                  IsolationLevel transactionsIsolationLevel,
                                  Mode transactionMode,
                                  Duration modifiedDuration,
@@ -60,6 +63,8 @@ public class CacheConfigurationImpl implements CacheConfiguration {
       this.writeThrough = writeThrough;
       this.storeByValue = storeByValue;
       this.staticsEnabled = staticsEnabled;
+      this.cacheLoader = cacheLoader;
+      this.cacheWriter = cacheWriter;
       this.transactionsIsolationLevel = transactionsIsolationLevel;
       this.modifiedDuration = modifiedDuration;
       this.accessedDuration = accessedDuration;
@@ -103,12 +108,12 @@ public class CacheConfigurationImpl implements CacheConfiguration {
 
    @Override
    public CacheLoader getCacheLoader() {
-      return null;
+      return cacheLoader;
    }
 
    @Override
    public CacheWriter getCacheWriter() {
-      return null;
+      return cacheWriter;
    }
 
    @Override

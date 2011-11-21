@@ -35,9 +35,7 @@ import org.infinispan.util.logging.LogFactory;
 import javax.cache.Cache;
 import javax.cache.CacheBuilder;
 import javax.cache.CacheConfiguration;
-import javax.cache.CacheLoader;
 import javax.cache.CacheManager;
-import javax.cache.CacheWriter;
 import javax.cache.Caching;
 import javax.cache.OptionalFeature;
 import javax.cache.Status;
@@ -199,11 +197,7 @@ class InfinispanCacheManagerAdapter implements CacheManager {
    }
 
    @SuppressWarnings("unchecked")
-   <K, V> Cache<K, V> createCache(String name,
-                                  CacheConfiguration cacheConfiguration,
-                                  CacheWriter<K, V> cacheWriter,
-                                  CacheLoader<K, V> cacheLoader,
-                                  Set<CacheListener<K, V>> listeners) {
+   <K, V> Cache<K, V> createCache(String name, CacheConfiguration cacheConfiguration, Set<CacheListener<K, V>> listeners) {
 
       // if one cache already exist with the same name it is stopped
       Cache<K, V> cache = getCache(name);
@@ -217,8 +211,6 @@ class InfinispanCacheManagerAdapter implements CacheManager {
             new DecoratedCache<K, V>((AdvancedCache<K, V>) cacheManager.getCache(name).getAdvancedCache(), classLoader),
             cacheConfiguration,
             this,
-            cacheWriter,
-            cacheLoader,
             immutableClasses,
             listeners
       );
