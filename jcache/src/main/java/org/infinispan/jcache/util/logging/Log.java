@@ -48,7 +48,6 @@ public interface Log extends BasicLogger {
    @Message(value = "No CacheWriter defined for write-through cache '%s'")
    void invalidWriteThroughConfiguration(String cacheName);
 
-
    @Message(value = "Cache '%s' isn't started")
    IllegalStateException cacheNotStarted(String cacheName);
 

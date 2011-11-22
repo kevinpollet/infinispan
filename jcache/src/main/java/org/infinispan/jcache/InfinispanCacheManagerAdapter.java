@@ -54,7 +54,7 @@ import static org.infinispan.jcache.util.Contracts.assertNotNull;
  *
  * @author Kevin Pollet <kevin.pollet@serli.com> (C) 2011 SERLI
  */
-class InfinispanCacheManagerAdapter implements CacheManager {
+public class InfinispanCacheManagerAdapter implements CacheManager {
 
    private static final Log log = LogFactory.getLog(InfinispanCacheManagerAdapter.class, Log.class);
 
@@ -211,7 +211,6 @@ class InfinispanCacheManagerAdapter implements CacheManager {
             new DecoratedCache<K, V>((AdvancedCache<K, V>) cacheManager.getCache(name).getAdvancedCache(), classLoader),
             cacheConfiguration,
             this,
-            immutableClasses,
             listeners
       );
 

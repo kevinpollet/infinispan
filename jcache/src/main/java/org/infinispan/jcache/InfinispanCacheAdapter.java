@@ -24,6 +24,7 @@ package org.infinispan.jcache;
 
 
 import org.infinispan.AdvancedCache;
+import org.infinispan.jcache.event.CacheEventBridge;
 import org.infinispan.jcache.event.CacheListener;
 import org.infinispan.jcache.util.logging.Log;
 import org.infinispan.util.logging.LogFactory;
@@ -53,7 +54,7 @@ import static org.infinispan.jcache.util.JMXHelper.unregisterStatisticsMBean;
  *
  * @author Kevin Pollet <kevin.pollet@serli.com> (C) 2011 SERLI
  */
-class InfinispanCacheAdapter<K, V> implements Cache<K, V> {
+public class InfinispanCacheAdapter<K, V> implements Cache<K, V> {
 
    private static final Log log = LogFactory.getLog(InfinispanCacheAdapter.class, Log.class);
 
@@ -61,23 +62,29 @@ class InfinispanCacheAdapter<K, V> implements Cache<K, V> {
    private final AdvancedCache<K, V> cache;
    private final CacheConfiguration cacheConfiguration;
    private final CacheManager cacheManager;
+   private final CacheEventBridge<K, V> cacheEventBridge;
    private final CacheStatistics cacheStatistics;
-   private final Set<Class<?>> immutableClasses;
-   private final Set<CacheListener<K, V>> listeners;
 
    InfinispanCacheAdapter(AdvancedCache<K, V> cache,
                           CacheConfiguration cacheConfiguration,
                           CacheManager cacheManager,
-                          Set<Class<?>> immutableClasses,
                           Set<CacheListener<K, V>> listeners) {
 
       this.status = UNINITIALISED;
       this.cache = cache;
       this.cacheConfiguration = cacheConfiguration;
       this.cacheManager = cacheManager;
+      this.cacheEventBridge = new CacheEventBridge<K, V>(this);
       this.cacheStatistics = new CacheStatisticsImpl(this, cache.getStats());
-      this.immutableClasses = immutableClasses;
-      this.listeners = listeners;
+
+      // register listeners
+      for (CacheListener<K, V> listener : listeners) {
+         cacheEventBridge.registerCacheEntryListener(
+               listener.getCacheEntryListener(),
+               listener.getNotificationScope(),
+               listener.isSynchronous()
+         );
+      }
    }
 
 
@@ -216,15 +223,13 @@ class InfinispanCacheAdapter<K, V> implements Cache<K, V> {
 
    @Override
    public boolean registerCacheEntryListener(CacheEntryListener<? super K, ? super V> cacheEntryListener, NotificationScope scope, boolean synchronous) {
-      final CacheListener<K, V> cacheListener = new CacheListener<K, V>(cacheEntryListener, scope, synchronous);
-      return listeners.add(cacheListener);
+      return cacheEventBridge.registerCacheEntryListener(cacheEntryListener, scope, synchronous);
    }
 
    @Override
    @SuppressWarnings("unchecked")
    public boolean unregisterCacheEntryListener(CacheEntryListener<?, ?> cacheEntryListener) {
-      final CacheListener<K, V> cacheListener = new CacheListener<K, V>((CacheEntryListener<K, V>) cacheEntryListener, null, true);
-      return listeners.remove(cacheListener);
+      return cacheEventBridge.unregisterCacheEntryListener(cacheEntryListener);
    }
 
    @Override
