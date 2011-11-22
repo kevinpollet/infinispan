@@ -23,6 +23,7 @@
 package org.infinispan.jcache;
 
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -59,7 +60,7 @@ public class CacheStatisticsTest {
       cacheStatistics = cache.getStatistics();
    }
 
-   @BeforeTest
+   @BeforeMethod
    public void beforeMethod() {
       cache.removeAll();
       cacheStatistics.clearStatistics();

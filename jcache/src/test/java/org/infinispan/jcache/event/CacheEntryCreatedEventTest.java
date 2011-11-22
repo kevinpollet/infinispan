@@ -22,6 +22,7 @@
  */
 package org.infinispan.jcache.event;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -40,8 +41,8 @@ import static junit.framework.Assert.assertEquals;
 @Test(groups = "functional", testName = "jcache.event.CacheEntryCreatedEventTest")
 public class CacheEntryCreatedEventTest {
 
-   @BeforeTest
-   public void beforeTest() {
+   @BeforeMethod
+   public void beforeMethod() {
       CacheEntryCreatedListenerImpl.nbCall = 0;
       CacheEntryCreatedListenerImpl.key = null;
       CacheEntryCreatedListenerImpl.value = null;

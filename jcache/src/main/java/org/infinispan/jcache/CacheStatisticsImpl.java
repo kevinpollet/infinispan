@@ -22,9 +22,8 @@
  */
 package org.infinispan.jcache;
 
-import org.infinispan.stats.Stats;
+import org.infinispan.AdvancedCache;
 
-import javax.cache.Cache;
 import javax.cache.CacheStatistics;
 import javax.cache.Status;
 import java.util.Date;
@@ -41,8 +40,8 @@ import static org.infinispan.jcache.util.Contracts.assertPositive;
 //TODO KP: add operation time average
 class CacheStatisticsImpl implements CacheStatistics {
 
-   private final Stats stats;
-   private final Cache<?, ?> cache;
+   private final InfinispanCacheAdapter<?, ?> cache;
+   private final AdvancedCache<?, ?> advancedCache;
    private AtomicLong totalCacheHits;
    private AtomicLong totalCacheMisses;
    private AtomicLong totalCacheGets;
@@ -54,9 +53,9 @@ class CacheStatisticsImpl implements CacheStatistics {
    private AtomicLong totalRemoveMillis;
    private AtomicReference<Date> statsCollectionStartDate;
 
-   CacheStatisticsImpl(Cache<?, ?> cache, Stats stats) {
-      this.stats = stats;
+   CacheStatisticsImpl(InfinispanCacheAdapter<?,?> cache) {
       this.cache = cache;
+      this.advancedCache = cache.getInfinispanCache().getAdvancedCache();
       this.totalCacheHits = new AtomicLong();
       this.totalCacheMisses = new AtomicLong();
       this.totalCacheGets = new AtomicLong();
@@ -100,7 +99,7 @@ class CacheStatisticsImpl implements CacheStatistics {
 
    @Override
    public long getCacheHits() {
-      return stats.getHits() - totalCacheHits.get();
+      return advancedCache.getStats().getHits() - totalCacheHits.get();
    }
 
    @Override
@@ -110,7 +109,7 @@ class CacheStatisticsImpl implements CacheStatistics {
 
    @Override
    public long getCacheMisses() {
-      return stats.getMisses() - totalCacheMisses.get();
+      return advancedCache.getStats().getMisses() - totalCacheMisses.get();
    }
 
    @Override
@@ -120,22 +119,22 @@ class CacheStatisticsImpl implements CacheStatistics {
 
    @Override
    public long getCacheGets() {
-      return stats.getRetrievals() - totalCacheGets.get();
+      return advancedCache.getStats().getRetrievals() - totalCacheGets.get();
    }
 
    @Override
    public long getCachePuts() {
-      return stats.getStores() - totalCachePuts.get();
+      return advancedCache.getStats().getStores() - totalCachePuts.get();
    }
 
    @Override
    public long getCacheRemovals() {
-      return stats.getRemoveHits() - totalCacheRemovals.get();
+      return advancedCache.getStats().getRemoveHits() - totalCacheRemovals.get();
    }
 
    @Override
    public long getCacheEvictions() {
-      return stats.getEvictions() - totalCacheEvictions.get();
+      return advancedCache.getStats().getEvictions() - totalCacheEvictions.get();
    }
 
    @Override

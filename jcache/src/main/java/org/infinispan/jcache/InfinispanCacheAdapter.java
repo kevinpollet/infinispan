@@ -75,7 +75,7 @@ public class InfinispanCacheAdapter<K, V> implements Cache<K, V> {
       this.cacheConfiguration = cacheConfiguration;
       this.cacheManager = cacheManager;
       this.cacheEventBridge = new CacheEventBridge<K, V>(this);
-      this.cacheStatistics = new CacheStatisticsImpl(this, cache.getStats());
+      this.cacheStatistics = new CacheStatisticsImpl(this);
 
       // register listeners
       for (CacheListener<K, V> listener : listeners) {
