@@ -52,7 +52,7 @@ import static org.infinispan.jcache.util.Contracts.assertNotNull;
  */
 class CacheBuilderImpl<K, V> implements CacheBuilder<K, V> {
 
-   private static final Log LOG = LogFactory.getLog(CacheBuilderImpl.class, Log.class);
+   private static final Log log = LogFactory.getLog(CacheBuilderImpl.class, Log.class);
 
    private final String name;
    private final CacheManager cacheManager;
@@ -87,11 +87,11 @@ class CacheBuilderImpl<K, V> implements CacheBuilder<K, V> {
    @Override
    public Cache<K, V> build() {
       if (readThrough && cacheLoader == null) {
-         LOG.invalidReadThroughConfiguration(name);
+         log.invalidReadThroughConfiguration(name);
          throw new InvalidConfigurationException("No CacheLoader defined for read-through cache '" + name + "'");
       }
       if (writeThrough && cacheWriter == null) {
-         LOG.invalidWriteThroughConfiguration(name);
+         log.invalidWriteThroughConfiguration(name);
          throw new InvalidConfigurationException("No CacheWriter defined for write-through cache '" + name + "'");
       }
 
