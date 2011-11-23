@@ -269,8 +269,8 @@ public class InfinispanCacheAdapter<K, V> implements Cache<K, V> {
             unregisterStatisticsMBean(cacheManager.getName(), getName());
          }
 
-         cache.stop();
          cache.clear();
+         cache.stop();
          status = STOPPED;
       }
    }
