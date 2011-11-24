@@ -48,6 +48,9 @@ public interface Log extends BasicLogger {
    @Message(value = "No CacheWriter defined for write-through cache '%s'")
    void invalidWriteThroughConfiguration(String cacheName);
 
+   @Message(value = "The implementation class cannot be unwrapped to '%s'")
+   IllegalArgumentException unableToUnwrapImplementation(Class<?> cls);
+
    @Message(value = "Cache '%s' isn't started")
    IllegalStateException cacheNotStarted(String cacheName);
 

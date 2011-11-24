@@ -184,7 +184,7 @@ public class InfinispanCacheManagerAdapter implements CacheManager {
       if (cls.isAssignableFrom(this.getClass())) {
          return cls.cast(this);
       }
-      throw new IllegalArgumentException("The implementation class cannot be unwrapped to '" + cls + "'");
+      throw log.unableToUnwrapImplementation(cls);
    }
 
    /**
