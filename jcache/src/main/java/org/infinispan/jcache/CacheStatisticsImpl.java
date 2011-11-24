@@ -53,7 +53,7 @@ class CacheStatisticsImpl implements CacheStatistics {
    private AtomicLong totalRemoveMillis;
    private AtomicReference<Date> statsCollectionStartDate;
 
-   CacheStatisticsImpl(InfinispanCacheAdapter<?,?> cache) {
+   CacheStatisticsImpl(InfinispanCacheAdapter<?, ?> cache) {
       this.cache = cache;
       this.advancedCache = cache.getInfinispanCache().getAdvancedCache();
       this.totalCacheHits = new AtomicLong();
@@ -104,7 +104,7 @@ class CacheStatisticsImpl implements CacheStatistics {
 
    @Override
    public float getCacheHitPercentage() {
-      return getCacheGets() != 0 ? ((float) getCacheHits()) / getCacheGets() : Float.NaN;
+      return divide(getCacheHits(), getCacheGets());
    }
 
    @Override
@@ -114,7 +114,7 @@ class CacheStatisticsImpl implements CacheStatistics {
 
    @Override
    public float getCacheMissPercentage() {
-      return getCacheGets() != 0 ? ((float) getCacheMisses()) / getCacheGets() : Float.NaN;
+      return divide(getCacheMisses(), getCacheGets());
    }
 
    @Override
@@ -139,17 +139,17 @@ class CacheStatisticsImpl implements CacheStatistics {
 
    @Override
    public float getAverageGetMillis() {
-      return totalGetMillis.get() / getCacheGets();
+      return divide(totalGetMillis.get(), getCacheGets());
    }
 
    @Override
    public float getAveragePutMillis() {
-      return totalPutMillis.get() / getCachePuts();
+      return divide(totalPutMillis.get(), getCachePuts());
    }
 
    @Override
    public float getAverageRemoveMillis() {
-      return totalRemoveMillis.get() / getCacheRemovals();
+      return divide(totalRemoveMillis.get(), getCacheRemovals());
    }
 
    public void addGetMillis(long millis) {
@@ -168,5 +168,9 @@ class CacheStatisticsImpl implements CacheStatistics {
       assertPositive(millis, "millis parameter must be positive");
 
       totalRemoveMillis.addAndGet(millis);
+   }
+
+   private float divide(long numerator, long denominator) {
+      return denominator == 0 ? Float.NaN : ((float) numerator) / denominator;
    }
 }
