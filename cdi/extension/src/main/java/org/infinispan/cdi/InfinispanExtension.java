@@ -22,7 +22,6 @@
  */
 package org.infinispan.cdi;
 
-import org.infinispan.cdi.event.cachemanager.CacheManagerEventBridge;
 import org.infinispan.cdi.interceptor.CachePutInterceptor;
 import org.infinispan.cdi.interceptor.CacheRemoveAllInterceptor;
 import org.infinispan.cdi.interceptor.CacheRemoveEntryInterceptor;
@@ -35,7 +34,6 @@ import org.infinispan.cdi.util.Version;
 import org.infinispan.cdi.util.logging.Log;
 import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.configuration.cache.Configuration;
-import org.infinispan.manager.EmbeddedCacheManager;
 import org.infinispan.util.logging.LogFactory;
 import org.jboss.solder.bean.BeanBuilder;
 import org.jboss.solder.bean.ContextualLifecycle;
@@ -47,9 +45,7 @@ import javax.cache.annotation.CacheRemoveEntry;
 import javax.cache.annotation.CacheResult;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
-import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Default;
-import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.AfterDeploymentValidation;
 import javax.enterprise.inject.spi.Annotated;
@@ -86,11 +82,11 @@ public class InfinispanExtension implements Extension {
    private static final Log log = LogFactory.getLog(InfinispanExtension.class, Log.class);
 
    private Producer<RemoteCache> remoteCacheProducer;
-   private final Set<ConfigurationHolder> configurations;
+   private final Set<ConfigurationHolder> cacheConfigurations;
    private final Map<Type, Set<Annotation>> remoteCacheInjectionPoints;
 
    InfinispanExtension() {
-      this.configurations = new HashSet<InfinispanExtension.ConfigurationHolder>();
+      this.cacheConfigurations = new HashSet<InfinispanExtension.ConfigurationHolder>();
       this.remoteCacheInjectionPoints = new HashMap<Type, Set<Annotation>>();
    }
 
@@ -171,7 +167,7 @@ public class InfinispanExtension implements Extension {
       final ConfigureCache annotation = event.getAnnotatedMember().getAnnotation(ConfigureCache.class);
 
       if (annotation != null) {
-         configurations.add(new ConfigurationHolder(
+         cacheConfigurations.add(new ConfigurationHolder(
                event.getProducer(),
                annotation.value(),
                getQualifiers(beanManager, event.getAnnotatedMember().getAnnotations())
@@ -201,33 +197,12 @@ public class InfinispanExtension implements Extension {
       }
    }
 
-   void registerCacheConfigurations(@Observes AfterDeploymentValidation event, CacheManagerEventBridge eventBridge, @Any Instance<EmbeddedCacheManager> cacheManagers, BeanManager beanManager) {
-      final CreationalContext<Configuration> ctx = beanManager.createCreationalContext(null);
-      final EmbeddedCacheManager defaultCacheManager = cacheManagers.select(new AnnotationLiteral<Default>() {}).get();
+   void registerCacheConfigurations(@Observes AfterDeploymentValidation event, BeanManager beanManager) {
+      beanManager.fireEvent(new StartupEvent());
+   }
 
-      for (ConfigurationHolder oneConfigurationHolder : configurations) {
-         final String cacheName = oneConfigurationHolder.getName();
-         final Configuration cacheConfiguration = oneConfigurationHolder.getProducer().produce(ctx);
-         final Set<Annotation> cacheQualifiers = oneConfigurationHolder.getQualifiers();
-
-         // if a specific cache manager is defined for this cache we use it
-         final Instance<EmbeddedCacheManager> specificCacheManager = cacheManagers.select(cacheQualifiers.toArray(new Annotation[cacheQualifiers.size()]));
-         final EmbeddedCacheManager cacheManager = specificCacheManager.isUnsatisfied() ? defaultCacheManager : specificCacheManager.get();
-
-         // the default configuration is registered by the default cache manager producer
-         if (!cacheName.trim().isEmpty()) {
-            if (cacheConfiguration != null) {
-               cacheManager.defineConfiguration(cacheName, cacheConfiguration);
-               log.cacheConfigurationDefined(cacheName, cacheManager);
-            } else if (!cacheManager.getCacheNames().contains(cacheName)) {
-               cacheManager.defineConfiguration(cacheName, cacheManager.getDefaultCacheConfiguration());
-               log.cacheConfigurationDefined(cacheName, cacheManager);
-            }
-         }
-
-         // register cache manager observers
-         eventBridge.registerObservers(cacheQualifiers, cacheName, cacheManager);
-      }
+   Set<ConfigurationHolder> getCacheConfigurations() {
+      return cacheConfigurations;
    }
 
    static class ConfigurationHolder {
